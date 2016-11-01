@@ -54,9 +54,9 @@ struct Simulation
 		return false;
 	}
 
-	void StepSimulation()
+	void StepSimulation(int framecount)
 	{
-		m_grid.Step();
+		m_grid.Step(framecount);
 	}
 
 	void CleanUpSimulation()

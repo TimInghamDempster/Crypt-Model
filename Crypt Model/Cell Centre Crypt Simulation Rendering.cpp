@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 		while(framecount < totalFrames)
 		{
 			TWinMain();
-			simulation.StepSimulation();
+			simulation.StepSimulation(framecount);
 			Renderer::Draw();			
 
 			if(framecount % 200 == 0)
@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
 			}
 
 			//Sleep(10);
+			framecount++;
 		}
 
 		outputFile.close();

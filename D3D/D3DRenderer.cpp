@@ -346,12 +346,12 @@ namespace Renderer
 		deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
 
 		rasterDesc.AntialiasedLineEnable = false;
-		rasterDesc.CullMode = D3D11_CULL_BACK;
+		rasterDesc.CullMode = D3D11_CULL_NONE;
 		rasterDesc.DepthBias = 0;
 		rasterDesc.DepthBiasClamp = 0.0f;
 		rasterDesc.DepthClipEnable = true;
 		rasterDesc.FillMode = D3D11_FILL_SOLID;
-		rasterDesc.FrontCounterClockwise = false;
+		rasterDesc.FrontCounterClockwise = true;
 		rasterDesc.MultisampleEnable = false;
 		rasterDesc.ScissorEnable = false;
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
@@ -415,7 +415,7 @@ namespace Renderer
 
 		LoadVertexShaderAndBuildInputLayout("SimpleVS.cso", &uiVertexShader, layout, 6, &uiInputLayout);
 		LoadPixelShader("SimplePS.cso", &uiPixelShader);
-		LoadMeshBuffersFromFile(mainDevice, &meshVertexBuffer, &meshIndexBuffer,"Sphere.obj", m_numVerts);
+		LoadMeshBuffersFromFile(mainDevice, &meshVertexBuffer, &meshIndexBuffer,"crypt.obj", m_numVerts);
 
 		float initCol[] = {1.0f, 1.0f, 0.0f, 1.0f};
 
@@ -707,15 +707,15 @@ namespace Renderer
 	{
 		frame++;
 
-		float zDist = 500.1f;
-		float height = 500.0f;
+		float zDist = 100.1f;
+		float height = 50.0f;
 
 		DirectX::FXMVECTOR camPos = {0.0f, height, zDist, 0.0f };
-		DirectX::FXMVECTOR camLookAt = {0.0f, 0.0f, 0.0f, 0.0f };
+		DirectX::FXMVECTOR camLookAt = {100.0f, 0.0f, 100.0f, 0.0f };
 		DirectX::FXMVECTOR camUp = {0.0f, 1.0f, 0.0f, 0.0f };
 
 		DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(camPos, camLookAt, camUp);
-		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(0.75f, 1280.0f / 720.0f, zDist - 500.0f, zDist + 500.0f);
+		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(0.75f, 1280.0f / 720.0f, zDist - 100.0f, zDist + 100.0f);
 
 		proj = DirectX::XMMatrixMultiply(view, proj);
 
@@ -741,7 +741,7 @@ namespace Renderer
 						{
 							DirectX::XMMATRIX world = DirectX::XMMatrixTranslation(vec.x, 0.0f, vec.y);
 							//DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(10.0f, 10.0f, 10.0f);
-							DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f);
+							DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(0.25f, 0.25f, 0.25f);
 
 							world = DirectX::XMMatrixMultiply(scale, world);
 							world = DirectX::XMMatrixMultiply(world, proj);
