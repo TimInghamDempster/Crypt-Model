@@ -1,13 +1,6 @@
 
 struct CryptBox;
 
-struct MutationData
-{
-	bool mutateQuiecence;
-	bool mutateAttachment;
-	bool mutateCellForces;
-};
-
 struct CryptReference
 {
 	CryptBox* m_box;
@@ -28,8 +21,14 @@ struct CryptBox
 	std::vector<Vector2D>* m_nextPositions;
 	std::vector<std::vector<CryptReference>> m_collisionReferences;
 	std::vector<CryptBox*> m_collisionBoxes;
+	std::vector<double> m_lengths;
+	std::vector<double> m_growthFactors;
+	std::vector<int> m_deadCrypts;
+	std::vector<int> m_mutated;
+	NormalDistributionRNG& m_growthFactorRNG;
 
-	CryptBox(int expectedNumberOfCells)
+	CryptBox(int expectedNumberOfCells, NormalDistributionRNG& growthFactorRNG) : 
+		m_growthFactorRNG(growthFactorRNG)
 	{
 		m_positions = new std::vector<Vector2D>();
 		m_nextPositions = new std::vector<Vector2D>();
@@ -37,6 +36,10 @@ struct CryptBox
 		m_positions->reserve(reserveSize);
 		m_nextPositions->reserve(reserveSize);
 		m_collisionReferences.reserve(reserveSize);
+		m_lengths.reserve(reserveSize);
+		m_growthFactors.reserve(reserveSize);
+		m_deadCrypts.reserve(reserveSize);
+		m_mutated.reserve(reserveSize);
 	}
 
 	void CleanUp()
@@ -45,14 +48,68 @@ struct CryptBox
 		delete m_nextPositions;
 	}
 
-	int AddCrypt(Vector2D position)
+	int AddCrypt(Vector2D position, double startLength, double growthFactor, int mutated)
 	{
 		m_positions->push_back(position);
 		m_nextPositions->push_back(position);
 		std::vector<CryptReference> refs;
 		m_collisionReferences.push_back(refs);
-		
+		m_lengths.push_back(startLength);
+		m_growthFactors.push_back(growthFactor);
+		m_deadCrypts.push_back(0);
+		m_mutated.push_back(mutated);
+
 		return m_positions->size() - 1;
+	}
+
+	void UpdateCrypts()
+	{
+		for(int i = 0; i < m_positions->size(); i++)
+		{
+			UpdateCrypt(i);
+		}
+	}
+
+	void Mutate()
+	{
+		m_mutated[0] = 1;
+	}
+
+	void UpdateCrypt(int id)
+	{
+		if(m_mutated[id] == 0)
+		{
+			m_lengths[id] += m_growthFactors[id];
+		}
+		else
+		{
+			m_lengths[id] += 0.01;
+		}
+
+		if(m_lengths[id] > 1.0)
+		{
+			m_lengths[id] = 0.5;
+			AddCrypt((*m_positions)[id], 0.5, m_growthFactorRNG.Next(), m_mutated[id]);
+			(*m_positions)[id].x += 0.00001;
+			(*m_positions)[id].y += 0.00001;
+			m_growthFactors[id] = m_growthFactorRNG.Next();
+		}
+		else if(m_lengths[id] < 0.0)
+		{
+			m_deadCrypts[id] = 1;
+		}
+	}
+
+
+	void RemoveDeadCrypts()
+	{
+		for(int i = 0; i < m_positions->size(); i++)
+		{
+			if(m_deadCrypts[i] == 1)
+			{
+				RemoveCrypt(i);
+			}
+		}
 	}
 
 	void UpdateCollisions()
@@ -70,13 +127,16 @@ struct CryptBox
 			{
 				for(int j = 0; j < otherBox->m_positions->size(); j++)
 				{
-					Vector2D delta = (*m_positions)[i] - (*otherBox->m_positions)[j];
-					if(delta.Length() <= 2.0)
+					if(m_deadCrypts[i] == 0 && otherBox->m_deadCrypts[j] == 0)
 					{
-						CryptReference ref;
-						ref.m_box = otherBox;
-						ref.m_cryptId = j;
-						m_collisionReferences[i].push_back(ref);
+						Vector2D delta = (*m_positions)[i] - (*otherBox->m_positions)[j];
+						if(delta.Length() <= 2.0)
+						{
+							CryptReference ref;
+							ref.m_box = otherBox;
+							ref.m_cryptId = j;
+							m_collisionReferences[i].push_back(ref);
+						}
 					}
 				}
 			}
@@ -147,5 +207,13 @@ struct CryptBox
 		m_nextPositions->pop_back();
 		m_collisionReferences[cryptId] = m_collisionReferences[last];
 		m_collisionReferences.pop_back();
+		m_lengths[cryptId] = m_lengths[last];
+		m_lengths.pop_back();
+		m_growthFactors[cryptId] = m_growthFactors[last];
+		m_growthFactors.pop_back();
+		m_deadCrypts[cryptId] = m_deadCrypts[last];
+		m_deadCrypts.pop_back();
+		m_mutated[cryptId] = m_mutated[last];
+		m_mutated.pop_back();
 	}
 };

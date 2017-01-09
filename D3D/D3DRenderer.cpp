@@ -719,8 +719,14 @@ namespace Renderer
 
 		proj = DirectX::XMMatrixMultiply(view, proj);
 
-		
-		
+		float colour[4] = { 1.0f, 1.0f, 0.0f, 1.0f };
+		D3D11_MAPPED_SUBRESOURCE mappedColour;
+		deviceContext->Map(psCBuffer,0, D3D11_MAP_WRITE_DISCARD, 0, &mappedColour);
+
+		memcpy(mappedColour.pData, colour, 16);
+
+		deviceContext->Unmap(psCBuffer, 0);
+
 		int numInBatch = 0;
 		/*
 		for(int i = 0; i< Simulation::crypts.size(); i++)
@@ -731,13 +737,63 @@ namespace Renderer
 				for(int row = 0; row < (int)column.size(); row++)
 				{
 					CryptBox& box = column[row];
-					for(int cell = 0; cell < box.m_positions->size(); cell++)
+					for(int cryptId = 0; cryptId < box.m_positions->size(); cryptId++)
 					//for(int cell = 0; cell < Simulation::crypt->deadcells.size(); cell++)
 					{
 						//Vector3D& vec = Simulation::crypt->deadcells[cell];
-						Vector2D& vec = (*box.m_positions)[cell];
+						Vector2D& vec = (*box.m_positions)[cryptId];
 
-						//if(vec.z < 0.0f)
+						if(box.m_deadCrypts[cryptId] == 0 && box.m_mutated[cryptId] == 0)
+						{
+							DirectX::XMMATRIX world = DirectX::XMMatrixTranslation(vec.x, 0.0f, vec.y);
+							//DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(10.0f, 10.0f, 10.0f);
+							DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(0.25f, 0.25f, 0.25f);
+
+							world = DirectX::XMMatrixMultiply(scale, world);
+							world = DirectX::XMMatrixMultiply(world, proj);
+
+							DirectX::XMFLOAT4X4 mat;
+							DirectX::XMStoreFloat4x4(&mat, world);
+
+							memcpy(matrixScratchBuffer + 16 * numInBatch, &world, 16 * sizeof(float));
+							numInBatch++;
+
+							if(numInBatch == batchSize)
+							{
+								DrawBatch(numInBatch);
+								numInBatch = 0;
+							} 
+						}
+					}
+				}
+			}
+		//}
+		DrawBatch(numInBatch);
+
+		colour[1] = 0.0f;
+		deviceContext->Map(psCBuffer,0, D3D11_MAP_WRITE_DISCARD, 0, &mappedColour);
+
+		memcpy(mappedColour.pData, colour, 16);
+
+		deviceContext->Unmap(psCBuffer, 0);
+		
+		numInBatch = 0;
+		/*
+		for(int i = 0; i< Simulation::crypts.size(); i++)
+			{*/
+			for(int col = 0; col < (int)::simulation.m_grid.m_columns.size(); col++)
+			{
+				std::vector<CryptBox>& column = ::simulation.m_grid.m_columns[col];
+				for(int row = 0; row < (int)column.size(); row++)
+				{
+					CryptBox& box = column[row];
+					for(int cryptId = 0; cryptId < box.m_positions->size(); cryptId++)
+					//for(int cell = 0; cell < Simulation::crypt->deadcells.size(); cell++)
+					{
+						//Vector3D& vec = Simulation::crypt->deadcells[cell];
+						Vector2D& vec = (*box.m_positions)[cryptId];
+
+						if(box.m_deadCrypts[cryptId] == 0 && box.m_mutated[cryptId] == 1)
 						{
 							DirectX::XMMATRIX world = DirectX::XMMatrixTranslation(vec.x, 0.0f, vec.y);
 							//DirectX::XMMATRIX scale = DirectX::XMMatrixScaling(10.0f, 10.0f, 10.0f);

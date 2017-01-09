@@ -8,6 +8,7 @@ struct FlatGrid
 	const double m_width;
 	const double m_boxHeight;
 	const double m_boxWidth;
+	NormalDistributionRNG m_growthFactorRNG;
 	
 	FlatGrid(int numRows, int numColumns, int rootExpectedNumberOfCryptsInBox, double boxHeight, double boxWidth)
 		:
@@ -16,7 +17,8 @@ struct FlatGrid
 		m_height(boxHeight * numColumns),
 		m_width(boxWidth * numRows),
 		m_boxHeight(boxHeight),
-		m_boxWidth(boxWidth)
+		m_boxWidth(boxWidth),
+		m_growthFactorRNG(-0.0, 0.001)
 	{
 		float stepWidth = boxWidth / rootExpectedNumberOfCryptsInBox;
 		float stepHeight = boxHeight / rootExpectedNumberOfCryptsInBox;
@@ -27,7 +29,7 @@ struct FlatGrid
 			m_columns.push_back(column);
 			for(int row = 0; row < m_numRows; row++)
 			{
-				CryptBox box(rootExpectedNumberOfCryptsInBox * rootExpectedNumberOfCryptsInBox);
+				CryptBox box(rootExpectedNumberOfCryptsInBox * rootExpectedNumberOfCryptsInBox, m_growthFactorRNG);
 				m_columns[col].push_back(box);
 				for(int y = 0; y < rootExpectedNumberOfCryptsInBox; y++)
 				{
@@ -36,7 +38,7 @@ struct FlatGrid
 						Vector2D pos;
 						pos.x = row * boxWidth + x * stepWidth;
 						pos.y = col * boxHeight + y * stepHeight;
-						m_columns[col][row].AddCrypt(pos);
+						m_columns[col][row].AddCrypt(pos, 0.5, m_growthFactorRNG.Next(), 0);
 					}
 				}
 			}
@@ -104,7 +106,7 @@ struct FlatGrid
 					CryptBox* newBox = FindBox((*box.m_positions)[cryptId]);
 					if(newBox != &box)
 					{
-						newBox->AddCrypt((*box.m_positions)[cryptId]);
+						newBox->AddCrypt((*box.m_positions)[cryptId], box.m_lengths[cryptId], box.m_growthFactors[cryptId], box.m_mutated[cryptId]);
 						box.RemoveCrypt(cryptId);
 					}
 				}
@@ -122,8 +124,21 @@ struct FlatGrid
 			{
 				for(int rowId = 0; rowId < m_numRows; rowId++)
 				{
+					m_columns[colId][rowId].RemoveDeadCrypts();
 					m_columns[colId][rowId].UpdateCollisions();
 				}
+			}
+		}
+		if(framecount == 1000)
+		{
+			m_columns[50][50].Mutate();
+		}
+		for(int colId = 0; colId < m_numColumns; colId++)
+		{
+			for(int rowId = 0; rowId < m_numRows; rowId++)
+			{
+				CryptBox& box = m_columns[colId][rowId];
+				box.UpdateCrypts();
 			}
 		}
 		for(int colId = 0; colId < m_numColumns; colId++)
