@@ -18,7 +18,7 @@ struct FlatGrid
 		m_width(boxWidth * numRows),
 		m_boxHeight(boxHeight),
 		m_boxWidth(boxWidth),
-		m_growthFactorRNG(-0.0, 0.001)
+		m_growthFactorRNG(0.5, 0.5)
 	{
 		float stepWidth = boxWidth / rootExpectedNumberOfCryptsInBox;
 		float stepHeight = boxHeight / rootExpectedNumberOfCryptsInBox;
@@ -106,7 +106,7 @@ struct FlatGrid
 					CryptBox* newBox = FindBox((*box.m_positions)[cryptId]);
 					if(newBox != &box)
 					{
-						newBox->AddCrypt((*box.m_positions)[cryptId], box.m_lengths[cryptId], box.m_growthFactors[cryptId], box.m_mutated[cryptId]);
+						newBox->AddCrypt((*box.m_positions)[cryptId], box.m_lengths[cryptId], box.m_nextLengths[cryptId], box.m_mutated[cryptId]);
 						box.RemoveCrypt(cryptId);
 					}
 				}

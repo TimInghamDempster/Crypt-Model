@@ -22,7 +22,7 @@ struct CryptBox
 	std::vector<std::vector<CryptReference>> m_collisionReferences;
 	std::vector<CryptBox*> m_collisionBoxes;
 	std::vector<double> m_lengths;
-	std::vector<double> m_growthFactors;
+	std::vector<double> m_nextLengths;
 	std::vector<int> m_deadCrypts;
 	std::vector<int> m_mutated;
 	NormalDistributionRNG& m_growthFactorRNG;
@@ -37,7 +37,7 @@ struct CryptBox
 		m_nextPositions->reserve(reserveSize);
 		m_collisionReferences.reserve(reserveSize);
 		m_lengths.reserve(reserveSize);
-		m_growthFactors.reserve(reserveSize);
+		m_nextLengths.reserve(reserveSize);
 		m_deadCrypts.reserve(reserveSize);
 		m_mutated.reserve(reserveSize);
 	}
@@ -55,7 +55,7 @@ struct CryptBox
 		std::vector<CryptReference> refs;
 		m_collisionReferences.push_back(refs);
 		m_lengths.push_back(startLength);
-		m_growthFactors.push_back(growthFactor);
+		m_nextLengths.push_back(growthFactor);
 		m_deadCrypts.push_back(0);
 		m_mutated.push_back(mutated);
 
@@ -79,11 +79,23 @@ struct CryptBox
 	{
 		if(m_mutated[id] == 0)
 		{
-			m_lengths[id] += m_growthFactors[id];
+			if(m_lengths[id] < m_nextLengths[id])
+			{
+				m_lengths[id] += 0.001;
+			}
+			else
+			{
+				m_lengths[id] -= 0.001;
+			}
 		}
 		else
 		{
-			m_lengths[id] += 0.01;
+			m_lengths[id] += 0.001;
+		}
+
+		if(abs(m_lengths[id] - m_nextLengths[id]) < 0.02)
+		{
+			m_nextLengths[id] = m_growthFactorRNG.Next();
 		}
 
 		if(m_lengths[id] > 1.0)
@@ -92,7 +104,7 @@ struct CryptBox
 			AddCrypt((*m_positions)[id], 0.5, m_growthFactorRNG.Next(), m_mutated[id]);
 			(*m_positions)[id].x += 0.00001;
 			(*m_positions)[id].y += 0.00001;
-			m_growthFactors[id] = m_growthFactorRNG.Next();
+			m_nextLengths[id] = m_growthFactorRNG.Next();
 		}
 		else if(m_lengths[id] < 0.0)
 		{
@@ -209,8 +221,8 @@ struct CryptBox
 		m_collisionReferences.pop_back();
 		m_lengths[cryptId] = m_lengths[last];
 		m_lengths.pop_back();
-		m_growthFactors[cryptId] = m_growthFactors[last];
-		m_growthFactors.pop_back();
+		m_nextLengths[cryptId] = m_nextLengths[last];
+		m_nextLengths.pop_back();
 		m_deadCrypts[cryptId] = m_deadCrypts[last];
 		m_deadCrypts.pop_back();
 		m_mutated[cryptId] = m_mutated[last];
