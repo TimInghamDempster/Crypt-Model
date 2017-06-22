@@ -25,6 +25,7 @@ struct CryptBox
 	std::vector<double> m_nextLengths;
 	std::vector<int> m_deadCrypts;
 	std::vector<int> m_mutated;
+	std::vector<double> m_mucosalMutation;
 	NormalDistributionRNG& m_growthFactorRNG;
 
 	CryptBox(int expectedNumberOfCells, NormalDistributionRNG& growthFactorRNG) : 
@@ -40,6 +41,7 @@ struct CryptBox
 		m_nextLengths.reserve(reserveSize);
 		m_deadCrypts.reserve(reserveSize);
 		m_mutated.reserve(reserveSize);
+		m_mucosalMutation.reserve(reserveSize);
 	}
 
 	void CleanUp()
@@ -58,6 +60,7 @@ struct CryptBox
 		m_nextLengths.push_back(growthFactor);
 		m_deadCrypts.push_back(0);
 		m_mutated.push_back(mutated);
+		m_mucosalMutation.push_back(0.0);
 
 		return m_positions->size() - 1;
 	}
@@ -91,6 +94,11 @@ struct CryptBox
 		else
 		{
 			m_lengths[id] += 0.001;
+			m_mucosalMutation[id] += 10.0;
+			if(m_mucosalMutation[id] > 100.0)
+			{
+				m_mucosalMutation[id] = 100.0;
+			}
 		}
 
 		if(abs(m_lengths[id] - m_nextLengths[id]) < 0.02)
@@ -190,6 +198,15 @@ struct CryptBox
 					(*m_nextPositions)[crypt] += normalised;
 					(*otherBox->m_nextPositions)[otherCrypt] -= normalised;
 				}
+
+				float invasionDelta = m_mucosalMutation[crypt] - otherBox->m_mucosalMutation[otherCrypt];
+				invasionDelta *= 0.2;
+
+				if((invasionDelta > 0.0 && m_mucosalMutation[crypt] > 90.0) || (invasionDelta < 0.0 && otherBox->m_mucosalMutation[otherCrypt] > 90.0))
+				{
+					m_mucosalMutation[crypt] -= invasionDelta;
+					otherBox->m_mucosalMutation[otherCrypt] += invasionDelta;
+				}
 			}
 		}
 	}
@@ -227,5 +244,7 @@ struct CryptBox
 		m_deadCrypts.pop_back();
 		m_mutated[cryptId] = m_mutated[last];
 		m_mutated.pop_back();
+		m_mucosalMutation[cryptId] = m_mucosalMutation[last];
+		m_mucosalMutation.pop_back();
 	}
 };

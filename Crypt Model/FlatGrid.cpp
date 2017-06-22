@@ -116,7 +116,7 @@ struct FlatGrid
 
 	void Step(int framecount)
 	{
-		if(framecount % 100 == 0)
+		if(framecount % 1 == 0)
 		{
 			AssignCryptsToBoxes();
 
