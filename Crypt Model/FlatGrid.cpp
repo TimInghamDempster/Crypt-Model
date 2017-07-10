@@ -18,7 +18,7 @@ struct FlatGrid
 		m_width(boxWidth * numRows),
 		m_boxHeight(boxHeight),
 		m_boxWidth(boxWidth),
-		m_growthFactorRNG(0.5, 0.5)
+		m_growthFactorRNG(0.5, 0.25)
 	{
 		float stepWidth = boxWidth / rootExpectedNumberOfCryptsInBox;
 		float stepHeight = boxHeight / rootExpectedNumberOfCryptsInBox;

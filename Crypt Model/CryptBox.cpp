@@ -84,11 +84,11 @@ struct CryptBox
 		{
 			if(m_lengths[id] < m_nextLengths[id])
 			{
-				m_lengths[id] += 0.001;
+				m_lengths[id] += 0.01;
 			}
 			else
 			{
-				m_lengths[id] -= 0.001;
+				m_lengths[id] -= 0.01;
 			}
 		}
 		else
