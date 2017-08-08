@@ -6,22 +6,37 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
 		IcebergRelease|Win32 = IcebergRelease|Win32
+		IcebergRelease|x64 = IcebergRelease|x64
 		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 		Test Debug|Win32 = Test Debug|Win32
+		Test Debug|x64 = Test Debug|x64
 		Test Release|Win32 = Test Release|Win32
+		Test Release|x64 = Test Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Debug|Win32.ActiveCfg = Debug|Win32
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Debug|Win32.Build.0 = Debug|Win32
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Debug|x64.ActiveCfg = Debug|x64
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Debug|x64.Build.0 = Debug|x64
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.IcebergRelease|Win32.ActiveCfg = IcebergRelease|Win32
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.IcebergRelease|Win32.Build.0 = IcebergRelease|Win32
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.IcebergRelease|x64.ActiveCfg = IcebergRelease|x64
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.IcebergRelease|x64.Build.0 = IcebergRelease|x64
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Release|Win32.ActiveCfg = Release|Win32
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Release|Win32.Build.0 = Release|Win32
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Release|x64.ActiveCfg = Release|x64
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Release|x64.Build.0 = Release|x64
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Debug|Win32.ActiveCfg = Test Debug|Win32
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Debug|Win32.Build.0 = Test Debug|Win32
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Debug|x64.ActiveCfg = Test Debug|x64
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Debug|x64.Build.0 = Test Debug|x64
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Release|Win32.ActiveCfg = Test Release|Win32
 		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Release|Win32.Build.0 = Test Release|Win32
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Release|x64.ActiveCfg = Test Release|x64
+		{EC161B5B-3B1F-4018-962F-44A7FCC091A0}.Test Release|x64.Build.0 = Test Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

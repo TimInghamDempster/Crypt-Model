@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 
 		while(framecount < totalFrames)
 		{
-			simulation.StepSimulation();	
+			simulation.StepSimulation(framecount);	
 
 			if(framecount % 200 == 0)
 			{

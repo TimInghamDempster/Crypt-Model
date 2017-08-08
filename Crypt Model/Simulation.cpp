@@ -12,7 +12,7 @@ struct Simulation
 	FlatGrid m_grid;
 
 	Simulation() :
-		m_grid(100,100,2,2.0,2.0)
+		m_grid(100,10000,2,2.0,2.0)
 	{
 	}
 
