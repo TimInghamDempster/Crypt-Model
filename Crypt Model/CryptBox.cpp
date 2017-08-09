@@ -65,11 +65,11 @@ struct CryptBox
 		return m_positions->size() - 1;
 	}
 
-	void UpdateCrypts()
+	void UpdateCrypts(double gridWidth, double gridHeight)
 	{
 		for(int i = 0; i < m_positions->size(); i++)
 		{
-			UpdateCrypt(i);
+			UpdateCrypt(i, gridWidth, gridHeight);
 		}
 	}
 
@@ -78,7 +78,7 @@ struct CryptBox
 		m_mutated[0] = 1;
 	}
 
-	void UpdateCrypt(int id)
+	void UpdateCrypt(int id, double gridWidth, double gridHeight)
 	{
 		if(m_mutated[id] == 0)
 		{
@@ -117,6 +117,23 @@ struct CryptBox
 		else if(m_lengths[id] < 0.0)
 		{
 			m_deadCrypts[id] = 1;
+		}
+
+		if((*m_positions)[id].x < 0.0f)
+		{
+			(*m_positions)[id].x -= (*m_positions)[id].x * 0.1f;
+		}
+		if((*m_positions)[id].x > gridWidth)
+		{
+			(*m_positions)[id].x -= ((*m_positions)[id].x - gridWidth) * 0.1f;
+		}
+		if((*m_positions)[id].y < 0.0f)
+		{
+			(*m_positions)[id].y -= (*m_positions)[id].y * 0.1f;
+		}
+		if((*m_positions)[id].y > gridHeight)
+		{
+			(*m_positions)[id].y -= ((*m_positions)[id].y - gridHeight) * 0.1f;
 		}
 	}
 

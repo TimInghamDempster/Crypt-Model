@@ -131,14 +131,14 @@ struct FlatGrid
 		}
 		if(framecount == 1000)
 		{
-			m_columns[50][50].Mutate();
+			//m_columns[50][50].Mutate();
 		}
 		for(int colId = 0; colId < m_numColumns; colId++)
 		{
 			for(int rowId = 0; rowId < m_numRows; rowId++)
 			{
 				CryptBox& box = m_columns[colId][rowId];
-				box.UpdateCrypts();
+				box.UpdateCrypts(m_numRows * 2.0, m_numColumns * 2.0);
 			}
 		}
 		for(int colId = 0; colId < m_numColumns; colId++)
