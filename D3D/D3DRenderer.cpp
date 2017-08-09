@@ -534,9 +534,9 @@ namespace Renderer
 		float zDist = 10000.1f;
 		float height = -3000.0f;
 
-		DirectX::FXMVECTOR camPos = {0.0f, height, zDist, 0.0f };
-		DirectX::FXMVECTOR camLookAt = {0.0f, height, 0.0f, 0.0f };
-		DirectX::FXMVECTOR camUp = {0.0f, 1.0f, 0.0f, 0.0f };
+		DirectX::FXMVECTOR camPos = DirectX::XMVectorSet(0.0f, height, zDist, 0.0f );
+		DirectX::FXMVECTOR camLookAt = DirectX::XMVectorSet(0.0f, height, 0.0f, 0.0f );
+		DirectX::FXMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f );
 
 		DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(camPos, camLookAt, camUp);
 		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(0.75f, 1280.0f / 720.0f, zDist - 1000.0f, zDist + 1000.0f);
@@ -597,9 +597,9 @@ namespace Renderer
 		float height = 10000.0f / scaleFactor;
 		float cellScale = 100.0f / scaleFactor;
 
-		DirectX::FXMVECTOR camPos = {0.0f, height, zDist, 0.0f };
-		DirectX::FXMVECTOR camLookAt = {0.0f, -500.0f / scaleFactor, 0.0f, 0.0f };
-		DirectX::FXMVECTOR camUp = {0.0f, 1.0f, 0.0f, 0.0f };
+		DirectX::FXMVECTOR camPos = DirectX::XMVectorSet(0.0f, height, zDist, 0.0f );
+		DirectX::FXMVECTOR camLookAt = DirectX::XMVectorSet(0.0f, -500.0f / scaleFactor, 0.0f, 0.0f );
+		DirectX::FXMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f );
 
 		DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(camPos, camLookAt, camUp);
 		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(0.75f, 1280.0f / 720.0f, zDist - 10000.0f / scaleFactor, zDist + 10000.0f / scaleFactor);
@@ -710,9 +710,9 @@ namespace Renderer
 		float zDist = 100.1f;
 		float height = 50.0f;
 
-		DirectX::FXMVECTOR camPos = {0.0f, height, zDist, 0.0f };
-		DirectX::FXMVECTOR camLookAt = {100.0f, 0.0f, 100.0f, 0.0f };
-		DirectX::FXMVECTOR camUp = {0.0f, 1.0f, 0.0f, 0.0f };
+		DirectX::FXMVECTOR camPos = DirectX::XMVectorSet(0.0f, height, zDist, 0.0f );
+		DirectX::FXMVECTOR camLookAt = DirectX::XMVectorSet(100.0f, 0.0f, 100.0f, 0.0f );
+		DirectX::FXMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f );
 
 		DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(camPos, camLookAt, camUp);
 		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(0.75f, 1280.0f / 720.0f, zDist - 100.0f, zDist + 100.0f);
